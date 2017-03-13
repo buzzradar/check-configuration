@@ -14,7 +14,14 @@ $buzzConfig = Yaml::parse(file_get_contents($projectConfig['parameters']['symfon
  * POSTGRES CONFIGURATION
  */
 $config['pgHost'] = $buzzConfig['parameters']['database_host'];
-$config['pgPort'] = $buzzConfig['parameters']['connections']['default']['port'];
+$pgPort = $buzzConfig['parameters']['connections']['default']['port'];
+
+if(substr($pgPort,0,1) == "%"){
+    $paramName = $paramName = str_replace("%","",$pgPort);
+    $config['pgPort'] = $buzzConfig['parameters'][$paramName];
+}else{
+    $config['pgPort'] = $pgPort;
+}
 $config['pgUser'] = $buzzConfig['parameters']['database_user'];
 $config['pgPassword'] = $buzzConfig['parameters']['database_password'];
 $config['pgDatabase'] = $buzzConfig['parameters']['database_name'];
