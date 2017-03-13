@@ -1,0 +1,2 @@
+parameters:
+    symfony_parameters_file: /path/to/the/project/app/config/parameters.yml

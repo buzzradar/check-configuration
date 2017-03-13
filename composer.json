@@ -1,0 +1,30 @@
+{
+    "name": "buzzradar/check-connections",
+    "description": "Standalone PHP script to test if servers and services are running correctly",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Miguel Alcaino",
+            "email": "miguel@buzzradar.com"
+        }
+    ],
+    "require": {
+        "predis/predis": "^1.1",
+        "symfony/yaml": "^3.2",
+        "incenteev/composer-parameter-handler": "^2.1"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ]
+    },
+    "extra": {
+        "incenteev-parameters": {
+            "file": "config/parameters.yml",
+            "dist-file": "config/parameters.yml.dist"
+        }
+    }
+}
