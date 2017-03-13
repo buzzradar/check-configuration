@@ -4,6 +4,21 @@ require 'vendor/autoload.php';
 
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * Returns the value of the parameter in case it is a link. Like thi %database_port%
+ * @param string $value
+ * @param array $buzzConfig
+ * @return string|int
+ */
+function getParameterValue($value, $buzzConfig){
+    if(substr($value,0,1) == "%"){
+        $paramName = str_replace("%","",$value);
+        return $buzzConfig['parameters'][$paramName];
+    }else{
+        return $value;
+    }
+}
+
 /*
  * PARAMETERS ARE COMING FROM THE BUZZ RADAR WEB PROJECT
  */
@@ -13,25 +28,18 @@ $buzzConfig = Yaml::parse(file_get_contents($projectConfig['parameters']['symfon
 /*
  * POSTGRES CONFIGURATION
  */
-$config['pgHost'] = $buzzConfig['parameters']['database_host'];
-$pgPort = $buzzConfig['parameters']['connections']['default']['port'];
-
-if(substr($pgPort,0,1) == "%"){
-    $paramName = $paramName = str_replace("%","",$pgPort);
-    $config['pgPort'] = $buzzConfig['parameters'][$paramName];
-}else{
-    $config['pgPort'] = $pgPort;
-}
-$config['pgUser'] = $buzzConfig['parameters']['database_user'];
-$config['pgPassword'] = $buzzConfig['parameters']['database_password'];
-$config['pgDatabase'] = $buzzConfig['parameters']['database_name'];
+$config['pgHost'] = getParameterValue($buzzConfig['parameters']['database_host'], $buzzConfig);
+$config['pgPort'] = getParameterValue($buzzConfig['parameters']['connections']['default']['port'], $buzzConfig);
+$config['pgUser'] = getParameterValue($buzzConfig['parameters']['database_user'], $buzzConfig);
+$config['pgPassword'] = getParameterValue($buzzConfig['parameters']['database_password'], $buzzConfig);
+$config['pgDatabase'] = getParameterValue($buzzConfig['parameters']['database_name'], $buzzConfig);
 
 /*
  * REDIS CONFIGURATION
  */
-$config['redisHost'] = $buzzConfig['parameters']['redis_cache_host'];
-$config['redisPort'] = $buzzConfig['parameters']['redis_cache_port'];
-$config['redisPassword'] = $buzzConfig['parameters']['redis_cache_password'];
+$config['redisHost'] = getParameterValue($buzzConfig['parameters']['redis_cache_host'], $buzzConfig);
+$config['redisPort'] = getParameterValue($buzzConfig['parameters']['redis_cache_port'], $buzzConfig);
+$config['redisPassword'] = getParameterValue($buzzConfig['parameters']['redis_cache_password'], $buzzConfig);
 
 /*
  * TESTING POSTGRES
@@ -72,17 +80,13 @@ catch (Exception $e) {
 foreach ($servers as $key => $server){
     $doctrineConnectionName = $server['doctrine_connection_name'];
     $config['slaveDatabases'][$key]['doctrineConnectionName'] = $doctrineConnectionName;
-    $slaveHost = $buzzConfig['parameters']['connections'][$doctrineConnectionName]['host'];
-    if(substr($slaveHost,0,1) == "%"){
-        $paramName = str_replace("%","",$slaveHost);
-        $config['slaveDatabases'][$key]['host'] = $buzzConfig['parameters'][$paramName];
-    }else{
-        $config['slaveDatabases'][$key]['host'] = $slaveHost;
-    }
+    $config['slaveDatabases'][$key]['host'] = getParameterValue($buzzConfig['parameters']['connections'][$doctrineConnectionName]['host'], $buzzConfig);
+    $config['slaveDatabases'][$key]['dbName'] = getParameterValue($buzzConfig['parameters']['connections'][$doctrineConnectionName]['dbname'], $buzzConfig);
+    $config['slaveDatabases'][$key]['port'] = getParameterValue($buzzConfig['parameters']['connections'][$doctrineConnectionName]['port'], $buzzConfig);
     $connectionString = sprintf($connectionStringSkeleton,
         $config['slaveDatabases'][$key]['host'],
-        $config['pgPort'],
-        $config['pgDatabase'],
+        $config['slaveDatabases'][$key]['port'],
+        $config['slaveDatabases'][$key]['dbName'],
         $config['pgUser'],
         $config['pgPassword']
     );
