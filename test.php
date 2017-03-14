@@ -22,8 +22,7 @@ function getParameterValue($value, $buzzConfig){
 /*
  * PARAMETERS ARE COMING FROM THE BUZZ RADAR WEB PROJECT
  */
-$projectConfig = Yaml::parse(file_get_contents('./config/parameters.yml'));
-$buzzConfig = Yaml::parse(file_get_contents($projectConfig['parameters']['symfony_parameters_file']));
+$buzzConfig = Yaml::parse(file_get_contents('./config/parameters.yml'));
 
 /*
  * POSTGRES CONFIGURATION

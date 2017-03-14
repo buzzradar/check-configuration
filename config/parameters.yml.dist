@@ -1,2 +1,27 @@
 parameters:
     symfony_parameters_file: /path/to/the/project/app/config/parameters.yml
+    database_host: 127.0.0.1
+    database_port: 5433
+    database_name: buzz-main
+    database_user: buzzweb
+    database_password: ukbestcompanysql
+    redis_cache_host: 127.0.0.1
+    redis_cache_port: 6379
+    redis_cache_password: 33781ec4e51deba4332473fa5816f9305a17a27a
+    connections:
+                default:
+                    port: 5439
+                    user: '%database_user%'
+                    password: '%database_password%'
+                slave1:
+                    host: '%database_host%'
+                    port: 5436
+                    dbname: buzz-slave
+                slave2:
+                    host: '%database_host%'
+                    port: 5437
+                    dbname: buzz-slave
+                slave3:
+                    host: '%database_host%'
+                    port: 5438
+                    dbname: buzz-slave
