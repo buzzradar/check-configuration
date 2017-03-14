@@ -11,7 +11,7 @@ use Symfony\Component\Yaml\Yaml;
  * @return string|int
  */
 function getParameterValue($value, $buzzConfig){
-    if(substr($value,0,1) == "%"){
+    if(substr($value,0,1) == "%" || substr($value,0,2) == "'%"){
         $paramName = str_replace("%","",$value);
         return $buzzConfig['parameters'][$paramName];
     }else{
