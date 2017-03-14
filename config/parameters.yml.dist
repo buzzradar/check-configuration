@@ -10,18 +10,18 @@ parameters:
     redis_cache_password: 33781ec4e51deba4332473fa5816f9305a17a27a
     connections:
                 default:
-                    port: 5439
+                    port: 5432
                     user: '%database_user%'
                     password: '%database_password%'
                 slave1:
                     host: '%database_host%'
-                    port: 5436
+                    port: 5432
                     dbname: buzz-slave
                 slave2:
                     host: '%database_host%'
-                    port: 5437
+                    port: 5432
                     dbname: buzz-slave
                 slave3:
                     host: '%database_host%'
-                    port: 5438
+                    port: 5432
                     dbname: buzz-slave
